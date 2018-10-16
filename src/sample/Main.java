@@ -1,44 +1,32 @@
 package sample;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-
-
-import static java.awt.Color.BLUE;
-
-
-//import java.awt.*;
 
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
 
-    DropShadow shadow = new DropShadow();
-
         //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        BorderPane borderPane = new BorderPane();
 
         primaryStage.setTitle("Hello World");
         Group root = new Group();
-        Scene scene = new Scene(root, 500,200);
+        Scene scene = new Scene(borderPane, 500,200);
         scene.setFill(Color.BLACK);
 
         primaryStage.setScene(scene);
 
         GridPane gridPane = new GridPane();
 
+        borderPane.setCenter(root);
         for(int x = 0; x < 10; x++)
         {
             for(int y = 0; y < 10; y++) {
@@ -67,7 +55,7 @@ public class Main extends Application {
         Button button8 = new Button();
         Button button9 = new Button();
         */
-        gridPane.setAlignment(Pos.CENTER);
+        //gridPane.setAlignment(Pos.CENTER);
 
         root.getChildren().add(gridPane);
 
