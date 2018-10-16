@@ -1,13 +1,23 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.TilePane;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+
+
+import static java.awt.Color.BLUE;
+
 
 //import java.awt.*;
 
@@ -16,24 +26,53 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
 
-
+    DropShadow shadow = new DropShadow();
 
         //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+
         primaryStage.setTitle("Hello World");
+        Group root = new Group();
+        Scene scene = new Scene(root, 500,200);
+        scene.setFill(Color.BLACK);
 
-        Button button1 = new Button("Button 1");
-        Button button2 = new Button("Button 2");
-        Button button3 = new Button("Button 3");
-        Button button4 = new Button("Button 4");
-        Button button5 = new Button("Button 5");
-        Button button6 = new Button("Button 6");
-        Button button7 = new Button("Button 7");
-        Button button8 = new Button("Button 8");
-        Button button9 = new Button("Button 9");
+        primaryStage.setScene(scene);
 
-        TilePane tilePane = new TilePane();
+        GridPane gridPane = new GridPane();
 
-        tilePane.getChildren().add(button1);
+        for(int x = 0; x < 10; x++)
+        {
+            for(int y = 0; y < 10; y++) {
+                //RowConstraints row = new RowConstraints(100);
+                PixelButton button = new PixelButton();
+                /*
+                button.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        button.setEffect(shadow);
+                    }
+                });
+                */
+                //gridPane.getRowConstraints().add(row);
+                gridPane.add(button, x, y);
+            }
+        }
+        /*
+        Button button1 = new Button();
+        Button button2 = new Button();
+        Button button3 = new Button();
+        Button button4 = new Button();
+        Button button5 = new Button();
+        Button button6 = new Button();
+        Button button7 = new Button();
+        Button button8 = new Button();
+        Button button9 = new Button();
+        */
+        gridPane.setAlignment(Pos.CENTER);
+
+        root.getChildren().add(gridPane);
+
+        /*
+        tilePane/getChildren().add(button1);
         tilePane.getChildren().add(button2);
         tilePane.getChildren().add(button3);
         tilePane.getChildren().add(button4);
@@ -42,10 +81,11 @@ public class Main extends Application {
         tilePane.getChildren().add(button7);
         tilePane.getChildren().add(button8);
         tilePane.getChildren().add(button9);
+        */
 
-        tilePane.setTileAlignment(Pos.TOP_LEFT);
 
-        primaryStage.setScene(new Scene(tilePane, 300, 275));
+
+       // primaryStage.setScene(new Scene(tilePane, 300, 275));
         primaryStage.show();
     }
 
