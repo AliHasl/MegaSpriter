@@ -1,20 +1,11 @@
 package sample;
 
-import javafx.event.EventHandler;
-import javafx.geometry.*;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-
-import java.awt.*;
 
 /**
  * Created by u1773783 on 16/10/2018.
@@ -23,44 +14,66 @@ import java.awt.*;
 
 public class PixelButton extends Button {
 
+    PixelBoard parent;
+
+    private Color[] paletteOneColours = {Color.BLACK, Color.GREEN, Color.PURPLE, Color.RED, Color.OLDLACE, Color.ORANGE,
+            Color.PINK, Color.DEEPPINK, Color.LAVENDERBLUSH, Color.YELLOW, Color.CYAN, Color.PURPLE, Color.ALICEBLUE,
+            Color.AZURE, Color.FUCHSIA, Color.PEACHPUFF};
+
+    private int mColour;
+    private int mPalette;
+    private int paintedColour;
+
+    public int getPaintedColour() {
+        return paintedColour;
+    }
+
+    public int getmPalette() {
+        return mPalette;
+    }
+
+    public void setmPalette(int mPalette) {
+        this.mPalette = mPalette;
+    }
 
 
+    public int getMColour() {
+        return mColour;
+    }
+    public void setmColour(int mColour) {
+        this.mColour = mColour;
+    }
 
-
-    public PixelButton() {
-        //Button button = this;
-
-
-
-
-
+    public PixelButton(PixelBoard owner) {
+        parent = owner;
+        mColour = 0;
         this.setMinSize(10, 10);
         this.setPrefSize(10, 10);
-        //this.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
 
-       // this.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> this.setBackground(new Background(new BackgroundFill(Color.BLUEVIOLET, CornerRadii.EMPTY, Insets.EMPTY))));
-        if(mouseDown) {
-            this.addEventHandler(MouseEvent.DRAG_DETECTED, event -> this.setBackground(new Background(new BackgroundFill(Color.BLUEVIOLET, CornerRadii.EMPTY, Insets.EMPTY))));
-        }
+        this.setOnDragDetected(mouseEvent -> this.startFullDrag());
+        this.setOnMouseDragEntered(mouseEvent -> fire());
+
+        this.setOnMousePressed(mouseEvent -> fire());
+
+        this.setOnAction(mouseEvent -> {
+            this.setBackground(new Background(new BackgroundFill
+                (paletteOneColours[mColour], CornerRadii.EMPTY, Insets.EMPTY)));
+                paintedColour = mColour;
+                updateOctalText();
+        });
+
+        this.setOnScroll(mouseEvent-> System.out.println("ToBeDone"));
 
     }
-    
-    private boolean mouseDown;
-    public void handle(MouseEvent t) {
-        if (t.getButton() == MouseButton.PRIMARY)
-            mouseDown = true;
-        else
-            mouseDown = false;
+
+    private void updateOctalText(){
+        parent.returnOctalText();
     }
+
+    public void increasePixelSize(){
+        this.resize(20,20);
+    }
+
 
 
 }
-/*
-    @Override
-    public void changeColour() {
-        cancelButtonProperty().colour = pink
-    }
-    getColour{
-        return this.rgb;
-    }
-*/

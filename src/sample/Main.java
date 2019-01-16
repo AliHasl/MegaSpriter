@@ -1,82 +1,172 @@
 package sample;
 
 import javafx.application.Application;
-import javafx.geometry.Pos;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-
 public class Main extends Application {
+
+
+
+    private TextArea octalOutput;
+    private PixelBoard pixelBoard;
+    private int selectedColour;
+    private int selectedPalette;
+
+    public int getSelectedPalette() {
+        return selectedPalette;
+    }
+
+    public void setSelectedPalette(int selectedPalette) {
+        this.selectedPalette = selectedPalette;
+    }
+
+    public int getSelectedColour() {
+        return selectedColour;
+    }
+
+    public void setSelectedColour(int selectedColour) {
+        this.selectedColour = selectedColour;
+    }
+
+    public TextArea getOctalOutput() {
+        return octalOutput;
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception{
 
-        //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        BorderPane borderPane = new BorderPane();
+        //////////////////
+        //Set up Menubar//
+        //////////////////
+        final Menu fileMenu = new Menu("File");
+        final MenuItem newMenuItem = new MenuItem("New...");
+        final MenuItem importMenutItem = new MenuItem("Import...");
+        final MenuItem exportMenuItem = new MenuItem("Export...");
+        final MenuItem saveMenuItem = new MenuItem("Save");
+        final MenuItem saveAsMenuItem = new MenuItem("Save As...");
+        final MenuItem quit = new MenuItem("Quit");
+        MenuBar menubar = new MenuBar();
+        menubar.getMenus().add(fileMenu);
+        fileMenu.getItems().addAll(newMenuItem, new SeparatorMenuItem(), saveMenuItem, saveAsMenuItem,
+                new SeparatorMenuItem(), importMenutItem, exportMenuItem, new SeparatorMenuItem(), quit);
 
-        primaryStage.setTitle("Hello World");
-        Group root = new Group();
-        Scene scene = new Scene(borderPane, 500,200);
+        //////////////////////////
+        //Set up New... MenuItem//
+        //////////////////////////
+        newMenuItem.setOnAction(mouseEvent->{
+            Stage newSpriteWindow = new Stage();
+            newSpriteWindow.setTitle("New Sprite");
+            NewSpriteScreen newSpriteScreen = new NewSpriteScreen();
+            newSpriteWindow.setScene(newSpriteScreen.getScene());
+            newSpriteWindow.initModality(Modality.WINDOW_MODAL);
+            newSpriteWindow.initOwner(primaryStage);
+            newSpriteWindow.show();
+        });
+
+        ////////////////////////
+        //Set up Quit MenuItem//
+        ////////////////////////
+        quit.setOnAction(mouseEvent->System.exit(0));
+
+        ////////////////////
+        //Set up mainScene//
+        ////////////////////
+
+        //Parent PaintArea = FXMLLoader.load(getClass().getResource("sample.fxml"));
+
+        VBox topLevelContainer = new VBox();
+        BorderPane mainScene = new BorderPane();
+        mainScene.setPadding(new Insets(10,10,10,10));
+        primaryStage.setTitle("SpriteSheet");
+        Scene scene = new Scene(topLevelContainer, 500,300);
+        topLevelContainer.getChildren().addAll(menubar, mainScene);
+
+
         scene.setFill(Color.BLACK);
-
         primaryStage.setScene(scene);
 
-        GridPane gridPane = new GridPane();
+        /////////////////////
+        //Set up toolBoxArea//
+        /////////////////////
 
-        borderPane.setCenter(root);
-        for(int x = 0; x < 10; x++)
-        {
-            for(int y = 0; y < 10; y++) {
-                //RowConstraints row = new RowConstraints(100);
-                PixelButton button = new PixelButton();
-                /*
-                button.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        button.setEffect(shadow);
-                    }
-                });
-                */
-                //gridPane.getRowConstraints().add(row);
-                gridPane.add(button, x, y);
+
+        ////////////////////
+        //Set up paintArea//
+        ////////////////////
+        Group paintArea = new Group();
+        pixelBoard = new PixelBoard(this);
+        paintArea.getChildren().add(pixelBoard.getGridPane());
+        mainScene.setCenter(paintArea);
+
+        ///////////////////
+        //Set up palette//
+        ///////////////////
+        BorderPane borderPaneRight = new BorderPane();
+        mainScene.setRight(borderPaneRight);
+
+        GridPane palette = new GridPane();
+        Group paletteGroup = new Group();
+
+        for(int x = 0; x < 8; x++){
+            for(int y = 0; y <= 1; y++){
+                PaletteButton paletteButton = new PaletteButton(this, x + (y * 8));
+                paletteGroup.getChildren().add(paletteButton);
+                palette.add(paletteButton, x, y);
             }
         }
-        /*
-        Button button1 = new Button();
-        Button button2 = new Button();
-        Button button3 = new Button();
-        Button button4 = new Button();
-        Button button5 = new Button();
-        Button button6 = new Button();
-        Button button7 = new Button();
-        Button button8 = new Button();
-        Button button9 = new Button();
-        */
-        //gridPane.setAlignment(Pos.CENTER);
+        borderPaneRight.setCenter(palette);
 
-        root.getChildren().add(gridPane);
+        ///////////////////////
+        //Set up palletteArea//
+        ///////////////////////
 
-        /*
-        tilePane/getChildren().add(button1);
-        tilePane.getChildren().add(button2);
-        tilePane.getChildren().add(button3);
-        tilePane.getChildren().add(button4);
-        tilePane.getChildren().add(button5);
-        tilePane.getChildren().add(button6);
-        tilePane.getChildren().add(button7);
-        tilePane.getChildren().add(button8);
-        tilePane.getChildren().add(button9);
-        */
+        ObservableList<String> availablePalettes = FXCollections.observableArrayList(
+                "Palette 1",
+                "Palette 2",
+                "Palette 3",
+                "Palette 4");
+        ComboBox comboBox = new ComboBox(availablePalettes);
+        comboBox.getSelectionModel().selectFirst();
+        setSelectedPalette(0);
+        comboBox.setOnAction(mouseEvent->{setSelectedPalette(comboBox.getSelectionModel().getSelectedIndex());
+        pixelBoard.updatePalette(getSelectedPalette());
+        });
+        comboBox.getVisibleRowCount();
+        borderPaneRight.setTop(comboBox);
 
 
+        ///////////////////
+        //Set up textArea//
+        ///////////////////
 
-       // primaryStage.setScene(new Scene(tilePane, 300, 275));
+        octalOutput = new TextArea();
+        octalOutput.setPrefColumnCount(10);
+        octalOutput.setPrefRowCount(10);
+        octalOutput.setWrapText(true);
+        borderPaneRight.setBottom(octalOutput);
+        pixelBoard.returnOctalText();
+
+
         primaryStage.show();
     }
 
+    public void updateColourSelection(int Colour){
+        for(Node p:pixelBoard.getGridPane().getChildren()){
+            if(p instanceof PixelButton){
+                ((PixelButton) p).setmColour(Colour);
+            }
+        }
+    }
 
     public static void main(String[] args) {
         launch(args);
