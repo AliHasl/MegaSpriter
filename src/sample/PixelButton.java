@@ -40,6 +40,7 @@ public class PixelButton extends Button {
     public int getMColour() {
         return mColour;
     }
+
     public void setmColour(int mColour) {
         this.mColour = mColour;
     }
@@ -57,17 +58,22 @@ public class PixelButton extends Button {
 
         this.setOnAction(mouseEvent -> {
             this.setBackground(new Background(new BackgroundFill
-                (paletteOneColours[mColour], CornerRadii.EMPTY, Insets.EMPTY)));
-                paintedColour = mColour;
-                updateOctalText();
+                    (paletteOneColours[mColour], CornerRadii.EMPTY, Insets.EMPTY)));
+            paintedColour = mColour;
+            updateOctalText();
         });
 
-        this.setOnScroll(mouseEvent-> System.out.println("ToBeDone"));
+        this.setOnScroll(mouseEvent -> {parent.zoom(mouseEvent.getDeltaY());
+
+        });
+
+
+
 
     }
 
     private void updateOctalText(){
-        parent.returnOctalText();
+        parent.returnHexText();
     }
 
     public void increasePixelSize(){

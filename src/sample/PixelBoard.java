@@ -3,13 +3,12 @@ package sample;
 
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 
-public class PixelBoard {
+public class PixelBoard extends GridPane {
 
-    private final int DEFAULT_X = 10;
-    private final int DEFAULT_Y = 10;
+    private final int DEFAULT_X = 8;
+    private final int DEFAULT_Y = 8;
     private int currentPalette;
 
     private GridPane gridPane;
@@ -22,6 +21,7 @@ public class PixelBoard {
 
 
     PixelBoard(Main owner){
+        super();
         parent = owner;
         currentPalette = 0;
         initialiseBoard(DEFAULT_X, DEFAULT_Y);
@@ -37,37 +37,77 @@ public class PixelBoard {
         gridPane = new GridPane();
         pixelButtonGroup = new Group();
 
-        for(int i = 0; i < x; i++)
+        for(int z = 0; z < y; z++)
         {
-            for(int z = 0; z < y; z++) {
-
+            for(int i = 0; i < x; i++)
+            {
                 PixelButton pixelbutton = new PixelButton(this);
                 pixelButtonGroup.getChildren().add(pixelbutton);
                 gridPane.add(pixelbutton, i, z);
+            }
+        }
+    }
 
+    void zoom(Double mouseWheel) {
+        for (Node n : gridPane.getChildren()
+                ) {
+            if (n instanceof PixelButton) {
+                ((PixelButton) n).setPrefSize(((PixelButton) n).getPrefWidth() + mouseWheel * 0.1,
+                        ((PixelButton) n).getPrefHeight() + mouseWheel * 0.1);
 
             }
         }
     }
 
-    void returnOctalText(){
+    void returnHexText(){
         StringBuilder returnString = new StringBuilder();
+
+        boolean firstPart = true;
+        int linePart = 0;
+        int newSquare = 0;
+
 
         for (Node n:gridPane.getChildren()
              ) {
-            if(n instanceof PixelButton){
-                if(((PixelButton) n).getPaintedColour() < 8){
-                    returnString.append(String.format("$0%s ",  Integer.toOctalString(((PixelButton) n).getPaintedColour())));
-                }
-                else{
-                    returnString.append(String.format("$%.2s ",  Integer.toOctalString(((PixelButton) n).getPaintedColour())));
-                }
+                if(n instanceof PixelButton){
+                    if(linePart == 7){
+                        returnString.append(String.format("%s\n",Integer.toHexString(((PixelButton) n)
+                                .getPaintedColour())).toUpperCase());
+                        firstPart = true;
+                        linePart = 0;
+                        newSquare++;
+                        if(newSquare == 8 && gridPane.getChildren().size() > 64){
+                            newSquare = 0;
+                            returnString.append("\n");
+                        }
+
+                    }
+                    else if(linePart == 0){
+                        returnString.append(String.format("DC.B    $%s",Integer.toHexString(((PixelButton) n)
+                                .getPaintedColour())).toUpperCase());
+                        firstPart = false;
+                        linePart++;
+                    }
+                    else if(!firstPart){
+                        returnString.append(String.format("%s, ",Integer.toHexString(((PixelButton) n)
+                                .getPaintedColour())).toUpperCase());
+                        firstPart = true;
+                        linePart++;
+                    }
+                    else
+                    {
+                        returnString.append(String.format("$%s",Integer.toHexString(((PixelButton) n)
+                                .getPaintedColour())).toUpperCase());
+                        firstPart = false;
+                        linePart++;
+                    }
+
 
             }
 
         }
 
-        parent.getOctalOutput().setText(returnString.toString());
+        parent.getHexOutput().setText(returnString.toString());
 
     }
 

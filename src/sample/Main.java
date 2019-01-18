@@ -4,23 +4,22 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 
-
-
-    private TextArea octalOutput;
+    private TextArea hexOutput;
     private PixelBoard pixelBoard;
     private int selectedColour;
     private int selectedPalette;
+    private BorderPane mainBorderPane;
 
     public int getSelectedPalette() {
         return selectedPalette;
@@ -38,8 +37,8 @@ public class Main extends Application {
         this.selectedColour = selectedColour;
     }
 
-    public TextArea getOctalOutput() {
-        return octalOutput;
+    public TextArea getHexOutput() {
+        return hexOutput;
     }
 
     @Override
@@ -48,36 +47,45 @@ public class Main extends Application {
         //////////////////
         //Set up Menubar//
         //////////////////
+        MenuBar menubar = new MenuBar();
         final Menu fileMenu = new Menu("File");
         final MenuItem newMenuItem = new MenuItem("New...");
-        final MenuItem importMenutItem = new MenuItem("Import...");
+        final MenuItem importMenuItem = new MenuItem("Import...");
+        importMenuItem.setDisable(true);
         final MenuItem exportMenuItem = new MenuItem("Export...");
+        exportMenuItem.setDisable(true);
         final MenuItem saveMenuItem = new MenuItem("Save");
+        saveMenuItem.setDisable(true);
         final MenuItem saveAsMenuItem = new MenuItem("Save As...");
+        saveAsMenuItem.setDisable(true);
         final MenuItem quit = new MenuItem("Quit");
-        MenuBar menubar = new MenuBar();
-        menubar.getMenus().add(fileMenu);
+
+        final Menu paletteMenu = new Menu("Palette");
+        final MenuItem newPalette = new MenuItem("New palette...");
+        final MenuItem savePalette = new MenuItem("Save palette...");
+        savePalette.setDisable(true);
+        final MenuItem loadPalette = new MenuItem("Load palette...");
+        loadPalette.setDisable(true);
+
+        menubar.getMenus().addAll(fileMenu, paletteMenu);
         fileMenu.getItems().addAll(newMenuItem, new SeparatorMenuItem(), saveMenuItem, saveAsMenuItem,
-                new SeparatorMenuItem(), importMenutItem, exportMenuItem, new SeparatorMenuItem(), quit);
+                new SeparatorMenuItem(), importMenuItem, exportMenuItem, new SeparatorMenuItem(), quit);
+        paletteMenu.getItems().addAll(newPalette,new SeparatorMenuItem(), savePalette, loadPalette);
 
         //////////////////////////
         //Set up New... MenuItem//
         //////////////////////////
-        newMenuItem.setOnAction(mouseEvent->{
-            Stage newSpriteWindow = new Stage();
-            newSpriteWindow.setTitle("New Sprite");
-            NewSpriteScreen newSpriteScreen = new NewSpriteScreen();
-            newSpriteWindow.setScene(newSpriteScreen.getScene());
-            newSpriteWindow.initModality(Modality.WINDOW_MODAL);
-            newSpriteWindow.initOwner(primaryStage);
-            newSpriteWindow.show();
-        });
+        newMenuItem.setOnAction(mouseEvent-> new NewSpriteScreen(primaryStage, this));
 
         ////////////////////////
         //Set up Quit MenuItem//
         ////////////////////////
         quit.setOnAction(mouseEvent->System.exit(0));
 
+        ///////////////////////////////
+        //Set up New Palette MenuItem//
+        ///////////////////////////////
+        newPalette.setOnAction(mouseEvent-> new PaletteMenu(primaryStage, this));
         ////////////////////
         //Set up mainScene//
         ////////////////////
@@ -85,13 +93,14 @@ public class Main extends Application {
         //Parent PaintArea = FXMLLoader.load(getClass().getResource("sample.fxml"));
 
         VBox topLevelContainer = new VBox();
-        BorderPane mainScene = new BorderPane();
-        mainScene.setPadding(new Insets(10,10,10,10));
+
+        mainBorderPane = new BorderPane();
+        mainBorderPane.setPadding(new Insets(10,10,10,10));
         primaryStage.setTitle("SpriteSheet");
-        Scene scene = new Scene(topLevelContainer, 500,300);
-        topLevelContainer.getChildren().addAll(menubar, mainScene);
-
-
+        Scene scene = new Scene(topLevelContainer, 400,300);
+        primaryStage.setMinHeight(340);
+        primaryStage.setMinWidth(420);
+        topLevelContainer.getChildren().addAll(menubar,mainBorderPane);
         scene.setFill(Color.BLACK);
         primaryStage.setScene(scene);
 
@@ -103,17 +112,39 @@ public class Main extends Application {
         ////////////////////
         //Set up paintArea//
         ////////////////////
-        Group paintArea = new Group();
+
+
+        //Group paintArea = new Group();
+
         pixelBoard = new PixelBoard(this);
-        paintArea.getChildren().add(pixelBoard.getGridPane());
-        mainScene.setCenter(paintArea);
+        mainBorderPane.setCenter(pixelBoard.getGridPane());
+        pixelBoard.getGridPane().setAlignment(Pos.CENTER);
+
+
+        /**
+         * Code for implementation of scrollbar on grid. Does not add anything but,
+         * I want to keep for possible implementation later.
+         *
+         *
+         //ScrollPane scrollPane = new ScrollPane();
+        //StackPane canvasHolder = new StackPane(pixelBoard.getGridPane());
+        //scrollPane.setContent(canvasHolder);
+        //paintArea.getChildren().add(scrollPane);
+        //paintArea.getChildren().add(canvasHolder);
+        //canvasHolder.minWidthProperty().bind(Bindings.createDoubleBinding(()->
+        //        scrollPane.getViewportBounds().getWidth(),scrollPane.viewportBoundsProperty()));
+
+        //paintArea.getChildren().add(canvasHolder);
+        //mainScene.setCenter(paintArea);
+        */
 
         ///////////////////
         //Set up palette//
         ///////////////////
-        BorderPane borderPaneRight = new BorderPane();
-        mainScene.setRight(borderPaneRight);
 
+        VBox vBox = new VBox();
+        vBox.setSpacing(5);
+        mainBorderPane.setRight(vBox);
         GridPane palette = new GridPane();
         Group paletteGroup = new Group();
 
@@ -124,7 +155,7 @@ public class Main extends Application {
                 palette.add(paletteButton, x, y);
             }
         }
-        borderPaneRight.setCenter(palette);
+
 
         ///////////////////////
         //Set up palletteArea//
@@ -142,19 +173,19 @@ public class Main extends Application {
         pixelBoard.updatePalette(getSelectedPalette());
         });
         comboBox.getVisibleRowCount();
-        borderPaneRight.setTop(comboBox);
+
 
 
         ///////////////////
         //Set up textArea//
         ///////////////////
 
-        octalOutput = new TextArea();
-        octalOutput.setPrefColumnCount(10);
-        octalOutput.setPrefRowCount(10);
-        octalOutput.setWrapText(true);
-        borderPaneRight.setBottom(octalOutput);
-        pixelBoard.returnOctalText();
+        hexOutput = new TextArea();
+        hexOutput.setPrefColumnCount(14);
+        hexOutput.setPrefRowCount(9);
+        hexOutput.setMinHeight(165);
+        pixelBoard.returnHexText();
+        vBox.getChildren().addAll(comboBox, palette,new Separator(), hexOutput);
 
 
         primaryStage.show();
@@ -166,6 +197,14 @@ public class Main extends Application {
                 ((PixelButton) p).setmColour(Colour);
             }
         }
+    }
+
+    public void newCanvas(int x, int y){
+        pixelBoard = null;
+        pixelBoard = new PixelBoard(this, x, y);
+        mainBorderPane.setCenter(pixelBoard.getGridPane());
+        pixelBoard.getGridPane().setAlignment(Pos.CENTER);
+        pixelBoard.returnHexText();
     }
 
     public static void main(String[] args) {
