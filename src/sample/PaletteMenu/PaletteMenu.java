@@ -1,4 +1,4 @@
-package sample;
+package sample.PaletteMenu;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -10,11 +10,17 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import sun.plugin.dom.css.RGBColor;
+import sample.Main;
 
 public class PaletteMenu {
 
+    public Color getSelectedColor() {
+        return selectedColor;
+    }
+
+    Color selectedColor = null;
     Main parentScreen;
+    GridPane palette1, palette2, palette3, palette4;
 
     public Scene getScene() {
         return newPaletteScene;
@@ -22,7 +28,7 @@ public class PaletteMenu {
 
     Scene newPaletteScene;
 
-    PaletteMenu(Stage PreviousStage, Main parent) {
+    public PaletteMenu(Stage PreviousStage, Main parent) {
         parentScreen = parent;
         Stage newPaletteWindow = new Stage();
         newPaletteWindow.setTitle("New palette");
@@ -66,7 +72,7 @@ public class PaletteMenu {
                     g = 0;
                     b = colourCount % 16 * 0.0666;
                 }
-                Button colourButton = new Button();
+                ColourButton colourButton = new ColourButton(new Color(r,g,b,1), this);
                 colourButton.setBackground(new Background(new BackgroundFill( new Color(r,g, b, 1)
                         ,CornerRadii.EMPTY, Insets.EMPTY)));
                 colourButton.setMinSize(10,10);
@@ -84,10 +90,10 @@ public class PaletteMenu {
 
         VBox vbox  = new VBox();
         vbox.setPadding(new Insets(10,0,10,20));
-        GridPane palette1 = new GridPane();
-        GridPane palette2 = new GridPane();
-        GridPane palette3 = new GridPane();
-        GridPane palette4 = new GridPane();
+        palette1 = new GridPane();
+        palette2 = new GridPane();
+        palette3 = new GridPane();
+        palette4 = new GridPane();
         Text palette1Text = new Text("Palette 1");
         Text palette2Text = new Text("Palette 2");
         Text palette3Text = new Text("Palette 3");
@@ -95,10 +101,10 @@ public class PaletteMenu {
         for(int x = 0; x < 8; x++){
             for(int y = 0; y < 2; y++)
             {
-                palette1.add(new Button(), x, y);
-                palette2.add(new Button(),x , y);
-                palette3.add(new Button(), x, y);
-                palette4.add(new Button(), x, y);
+                palette1.add(new PaletteButton(this), x, y);
+                palette2.add(new PaletteButton(this),x , y);
+                palette3.add(new PaletteButton(this), x, y);
+                palette4.add(new PaletteButton(this), x, y);
             }
         }
 
@@ -109,15 +115,28 @@ public class PaletteMenu {
         /////////////////
         //Lower Section//
         /////////////////
-        Button createButton = new Button("Create");
+        Button applyButton = new Button("Apply");
         Button cancelButton = new Button("Cancel");
-        Text errorText = new Text();
-        errorText.setFill(Color.RED);
-        bottomOptions.getChildren().addAll(errorText, createButton, cancelButton);
+        Button saveAsButton = new Button("Save As...");
+        Button loadButton = new Button("Load...");
+        bottomOptions.getChildren().addAll(saveAsButton, loadButton, applyButton, cancelButton);
         Stage thisStage = (Stage) this.getScene().getWindow();
         cancelButton.setCancelButton(true);
-        createButton.setDefaultButton(true);
+        applyButton.setDefaultButton(true);
 
         cancelButton.setOnAction(mouseEvent->thisStage.close());
+
+        applyButton.setOnAction(mouseEvent->{
+            parentScreen.setUpPalettes(palette1, palette2, palette3, palette4);
+            thisStage.close();
+        });
+    }
+
+    public void setSelectedColor(Color selectedColor) {
+        this.selectedColor = selectedColor;
+    }
+
+    public GridPane returnPalette(GridPane palette){
+        return palette;
     }
 }

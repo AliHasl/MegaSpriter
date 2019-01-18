@@ -41,7 +41,7 @@ public class PixelBoard extends GridPane {
         {
             for(int i = 0; i < x; i++)
             {
-                PixelButton pixelbutton = new PixelButton(this);
+                PixelButton pixelbutton = new PixelButton(this, parent);
                 pixelButtonGroup.getChildren().add(pixelbutton);
                 gridPane.add(pixelbutton, i, z);
             }
@@ -65,8 +65,6 @@ public class PixelBoard extends GridPane {
         boolean firstPart = true;
         int linePart = 0;
         int newSquare = 0;
-
-
         for (Node n:gridPane.getChildren()
              ) {
                 if(n instanceof PixelButton){

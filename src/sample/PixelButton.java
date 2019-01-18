@@ -16,13 +16,12 @@ public class PixelButton extends Button {
 
     PixelBoard parent;
 
-    private Color[] paletteOneColours = {Color.BLACK, Color.GREEN, Color.PURPLE, Color.RED, Color.OLDLACE, Color.ORANGE,
-            Color.PINK, Color.DEEPPINK, Color.LAVENDERBLUSH, Color.YELLOW, Color.CYAN, Color.PURPLE, Color.ALICEBLUE,
-            Color.AZURE, Color.FUCHSIA, Color.PEACHPUFF};
+
 
     private int mColour;
     private int mPalette;
     private int paintedColour;
+    private Main mainScreen;
 
     public int getPaintedColour() {
         return paintedColour;
@@ -45,7 +44,8 @@ public class PixelButton extends Button {
         this.mColour = mColour;
     }
 
-    public PixelButton(PixelBoard owner) {
+    public PixelButton(PixelBoard owner, Main topLevel) {
+        mainScreen = topLevel;
         parent = owner;
         mColour = 0;
         this.setMinSize(10, 10);
@@ -58,7 +58,7 @@ public class PixelButton extends Button {
 
         this.setOnAction(mouseEvent -> {
             this.setBackground(new Background(new BackgroundFill
-                    (paletteOneColours[mColour], CornerRadii.EMPTY, Insets.EMPTY)));
+                    (mainScreen.getSelectedColour(), CornerRadii.EMPTY, Insets.EMPTY)));
             paintedColour = mColour;
             updateOctalText();
         });
@@ -67,19 +67,10 @@ public class PixelButton extends Button {
 
         });
 
-
-
-
     }
 
     private void updateOctalText(){
         parent.returnHexText();
     }
-
-    public void increasePixelSize(){
-        this.resize(20,20);
-    }
-
-
 
 }

@@ -12,14 +12,27 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import sample.PaletteMenu.PaletteButton;
+import sample.PaletteMenu.PaletteMenu;
+import sun.text.resources.ro.CollationData_ro;
 
 public class Main extends Application {
 
     private TextArea hexOutput;
     private PixelBoard pixelBoard;
-    private int selectedColour;
+    private Color selectedColour;
     private int selectedPalette;
     private BorderPane mainBorderPane;
+    private VBox rightVBox;
+    ComboBox paletteComboBox;
+
+    private Color[] defaultPalette1Colours = {Color.BLACK, Color.GREEN, Color.PURPLE, Color.RED, Color.OLDLACE, Color.ORANGE,
+            Color.PINK, Color.DEEPPINK, Color.LAVENDERBLUSH, Color.YELLOW, Color.CYAN, Color.PURPLE, Color.ALICEBLUE,
+            Color.AZURE, Color.FUCHSIA, Color.PEACHPUFF};
+
+    private Color[] palette1Array, palette2Array, palette3Array, palette4Array;
+
+    GridPane mainPalette;
 
     public int getSelectedPalette() {
         return selectedPalette;
@@ -29,11 +42,11 @@ public class Main extends Application {
         this.selectedPalette = selectedPalette;
     }
 
-    public int getSelectedColour() {
+    public Color getSelectedColour() {
         return selectedColour;
     }
 
-    public void setSelectedColour(int selectedColour) {
+    public void setSelectedColour(Color selectedColour) {
         this.selectedColour = selectedColour;
     }
 
@@ -43,7 +56,10 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-
+        palette1Array = new Color[16];
+        palette2Array = new Color[16];
+        palette3Array = new Color[16];
+        palette4Array = new Color[16];
         //////////////////
         //Set up Menubar//
         //////////////////
@@ -59,7 +75,6 @@ public class Main extends Application {
         final MenuItem saveAsMenuItem = new MenuItem("Save As...");
         saveAsMenuItem.setDisable(true);
         final MenuItem quit = new MenuItem("Quit");
-
         final Menu paletteMenu = new Menu("Palette");
         final MenuItem newPalette = new MenuItem("New palette...");
         final MenuItem savePalette = new MenuItem("Save palette...");
@@ -96,7 +111,7 @@ public class Main extends Application {
 
         mainBorderPane = new BorderPane();
         mainBorderPane.setPadding(new Insets(10,10,10,10));
-        primaryStage.setTitle("SpriteSheet");
+        primaryStage.setTitle("MegaSpriter");
         Scene scene = new Scene(topLevelContainer, 400,300);
         primaryStage.setMinHeight(340);
         primaryStage.setMinWidth(420);
@@ -120,6 +135,7 @@ public class Main extends Application {
         mainBorderPane.setCenter(pixelBoard.getGridPane());
         pixelBoard.getGridPane().setAlignment(Pos.CENTER);
 
+        selectedColour = defaultPalette1Colours[0];
 
         /**
          * Code for implementation of scrollbar on grid. Does not add anything but,
@@ -142,17 +158,18 @@ public class Main extends Application {
         //Set up palette//
         ///////////////////
 
-        VBox vBox = new VBox();
-        vBox.setSpacing(5);
-        mainBorderPane.setRight(vBox);
-        GridPane palette = new GridPane();
+        rightVBox = new VBox();
+        rightVBox.setSpacing(5);
+        mainBorderPane.setRight(rightVBox);
+        mainPalette = new GridPane();
         Group paletteGroup = new Group();
 
         for(int x = 0; x < 8; x++){
             for(int y = 0; y <= 1; y++){
-                PaletteButton paletteButton = new PaletteButton(this, x + (y * 8));
-                paletteGroup.getChildren().add(paletteButton);
-                palette.add(paletteButton, x, y);
+                MainPaletteButton mainPaletteButton = new MainPaletteButton(this, x + (y * 8),
+                        defaultPalette1Colours[x + (y * 8)]);
+                paletteGroup.getChildren().add(mainPaletteButton);
+                mainPalette.add(mainPaletteButton, x, y);
             }
         }
 
@@ -166,13 +183,12 @@ public class Main extends Application {
                 "Palette 2",
                 "Palette 3",
                 "Palette 4");
-        ComboBox comboBox = new ComboBox(availablePalettes);
-        comboBox.getSelectionModel().selectFirst();
+        paletteComboBox = new ComboBox(availablePalettes);
+        paletteComboBox.getSelectionModel().selectFirst();
         setSelectedPalette(0);
-        comboBox.setOnAction(mouseEvent->{setSelectedPalette(comboBox.getSelectionModel().getSelectedIndex());
+        paletteComboBox.setOnAction(mouseEvent->{updateColourPalette( paletteComboBox.getSelectionModel().getSelectedIndex());
         pixelBoard.updatePalette(getSelectedPalette());
         });
-        comboBox.getVisibleRowCount();
 
 
 
@@ -185,7 +201,7 @@ public class Main extends Application {
         hexOutput.setPrefRowCount(9);
         hexOutput.setMinHeight(165);
         pixelBoard.returnHexText();
-        vBox.getChildren().addAll(comboBox, palette,new Separator(), hexOutput);
+        rightVBox.getChildren().addAll(paletteComboBox, mainPalette,new Separator(), hexOutput);
 
 
         primaryStage.show();
@@ -207,7 +223,77 @@ public class Main extends Application {
         pixelBoard.returnHexText();
     }
 
+    private void updateColourPalette(int colourPalette){
+        int count = 0;
+        switch (colourPalette){
+            case 0: for(Node c : mainPalette.getChildren()){
+                if(c instanceof MainPaletteButton){
+                    ((MainPaletteButton) c).setMColour(palette1Array[count]);
+                    count++;
+                }
+            }
+                break;
+            case 1: for(Node c : mainPalette.getChildren()) {
+                if (c instanceof MainPaletteButton) {
+                    ((MainPaletteButton) c).setMColour(palette2Array[count]);
+                    count++;
+                }
+            }
+                break;
+            case 2: for(Node c : mainPalette.getChildren()) {
+                if (c instanceof MainPaletteButton) {
+                    ((MainPaletteButton) c).setMColour(palette3Array[count]);
+                    count++;
+                }
+            }
+                break;
+            case 3: for(Node c : mainPalette.getChildren()) {
+                if (c instanceof MainPaletteButton) {
+                    ((MainPaletteButton) c).setMColour(palette4Array[count]);
+                    count++;
+                }
+            }
+        }
+
+    }
+
+    public void setUpPalettes(GridPane one, GridPane two, GridPane three, GridPane four){
+        int count = 0;
+        for(Node n: one.getChildren()){
+            if(n instanceof PaletteButton){
+                palette1Array[count] = ((PaletteButton) n).getmColor();
+                count++;
+            }
+        }
+        count = 0;
+        for(Node n: two.getChildren()){
+            if(n instanceof PaletteButton){
+                palette2Array[count] = ((PaletteButton) n).getmColor();
+                count++;
+            }
+        }
+        count = 0;
+        for(Node n: three.getChildren()){
+            if(n instanceof PaletteButton){
+                palette3Array[count] = ((PaletteButton) n).getmColor();
+                count++;
+            }
+        }
+        count = 0;
+        for(Node n: four.getChildren()){
+            if(n instanceof PaletteButton){
+                palette4Array[count] = ((PaletteButton) n).getmColor();
+                count++;
+            }
+        }
+        setSelectedPalette(0);
+        paletteComboBox.getSelectionModel().selectFirst();
+        updateColourPalette(0);
+    }
+
+
     public static void main(String[] args) {
         launch(args);
     }
 }
+
