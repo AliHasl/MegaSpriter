@@ -22,7 +22,7 @@ public class MainPaletteButton extends Button {
         mColourRef = colourRef;
         buttonActions();
 
-        //this.setOnAction(mouseEvent->{parent.setSelectedColour(mColour);
+        //this.setOnAction(mouseEvent->{parent.setSelectedColourText(mColour);
         //parent.updateColourSelection(mColourRef);
         //});
     }

@@ -2,7 +2,7 @@ package sample.PaletteMenu;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
@@ -12,15 +12,26 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import sample.Main;
 
+import java.util.ArrayList;
+
 public class PaletteMenu {
+
+
+    Stage newPaletteWindow, parentStage;
+    Color selectedColor = null;
+    Main parentScreen;
+    GridPane palette1, palette2, palette3, palette4;
+    Boolean existingPalettes = false;
+    Color[] existingPalette1, existingPalette2, existingPalette3, existingPalette4;
+    Text selectedColourText;
+    public void setSelectedColourText(String newColourText) {
+        selectedColourText.setText(newColourText);
+    }
+
 
     public Color getSelectedColor() {
         return selectedColor;
     }
-
-    Color selectedColor = null;
-    Main parentScreen;
-    GridPane palette1, palette2, palette3, palette4;
 
     public Scene getScene() {
         return newPaletteScene;
@@ -28,9 +39,28 @@ public class PaletteMenu {
 
     Scene newPaletteScene;
 
-    public PaletteMenu(Stage PreviousStage, Main parent) {
+    public PaletteMenu(Stage previousStage, Main parent) {
         parentScreen = parent;
-        Stage newPaletteWindow = new Stage();
+        newPaletteWindow = new Stage();
+        parentStage = previousStage;
+        InitialisePaletteMenu();
+
+    }
+
+    public PaletteMenu(Stage previousStage, Main parent, ArrayList previousPalettes){
+        parentScreen = parent;
+        newPaletteWindow = new Stage();
+        parentStage = previousStage;
+        existingPalettes = true;
+        existingPalette1 = (Color[])previousPalettes.get(0);
+        existingPalette2 = (Color[])previousPalettes.get(1);
+        existingPalette3 = (Color[])previousPalettes.get(2);
+        existingPalette4 = (Color[])previousPalettes.get(3);
+
+        InitialisePaletteMenu();
+    }
+
+    private void InitialisePaletteMenu(){
         newPaletteWindow.setTitle("New palette");
         BorderPane contents = new BorderPane();
         newPaletteScene = new Scene(contents, 500, 340);
@@ -38,7 +68,7 @@ public class PaletteMenu {
         newPaletteWindow.setMinHeight(380);
         newPaletteWindow.setScene(newPaletteScene);
         newPaletteWindow.initModality(Modality.WINDOW_MODAL);
-        newPaletteWindow.initOwner(PreviousStage);
+        newPaletteWindow.initOwner(parentStage);
         newPaletteWindow.show();
         contents.setPadding(new Insets(10,10,10,20));
         FlowPane bottomOptions = new FlowPane();
@@ -50,6 +80,8 @@ public class PaletteMenu {
         //Colour Selection//
         ////////////////////
 
+        VBox centralVBox = new VBox();
+        centralVBox.setSpacing(5.0);
         GridPane colourGrid = new GridPane();
         int colourCount = 0;
         double r,g,b;
@@ -82,8 +114,10 @@ public class PaletteMenu {
             }
         }
 
-        contents.setCenter(colourGrid);
-        colourGrid.setAlignment(Pos.CENTER);
+        selectedColourText = new Text();
+        centralVBox.getChildren().addAll(colourGrid ,selectedColourText);
+        contents.setCenter(centralVBox);
+        centralVBox.setAlignment(Pos.CENTER);
         ////////////////
         //Palette Area//
         ////////////////
@@ -105,6 +139,38 @@ public class PaletteMenu {
                 palette2.add(new PaletteButton(this),x , y);
                 palette3.add(new PaletteButton(this), x, y);
                 palette4.add(new PaletteButton(this), x, y);
+            }
+        }
+
+        if(existingPalettes){
+            System.out.println("YOYOYO");
+            int count = 0;
+            for (Node n : palette1.getChildren()){
+                if(n instanceof PaletteButton){
+                    ((PaletteButton) n).setmColor(existingPalette1[count]);
+                    count++;
+                }
+            }
+            count = 0;
+            for (Node n : palette2.getChildren()){
+                if(n instanceof PaletteButton){
+                    ((PaletteButton) n).setmColor(existingPalette2[count]);
+                    count++;
+                }
+            }
+            count = 0;
+            for (Node n : palette3.getChildren()){
+                if(n instanceof PaletteButton){
+                    ((PaletteButton) n).setmColor(existingPalette3[count]);
+                    count++;
+                }
+            }
+            count = 0;
+            for (Node n : palette4.getChildren()){
+                if(n instanceof PaletteButton){
+                    ((PaletteButton) n).setmColor(existingPalette4[count]);
+                    count++;
+                }
             }
         }
 

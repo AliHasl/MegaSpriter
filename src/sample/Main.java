@@ -16,6 +16,9 @@ import sample.PaletteMenu.PaletteButton;
 import sample.PaletteMenu.PaletteMenu;
 import sun.text.resources.ro.CollationData_ro;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main extends Application {
 
     private TextArea hexOutput;
@@ -31,6 +34,7 @@ public class Main extends Application {
             Color.AZURE, Color.FUCHSIA, Color.PEACHPUFF};
 
     private Color[] palette1Array, palette2Array, palette3Array, palette4Array;
+    private ArrayList paletteList;
 
     GridPane mainPalette;
 
@@ -60,6 +64,11 @@ public class Main extends Application {
         palette2Array = new Color[16];
         palette3Array = new Color[16];
         palette4Array = new Color[16];
+        paletteList = new ArrayList();
+        paletteList.add(palette1Array);
+        paletteList.add(palette2Array);
+        paletteList.add(palette3Array);
+        paletteList.add(palette4Array);
         //////////////////
         //Set up Menubar//
         //////////////////
@@ -77,6 +86,7 @@ public class Main extends Application {
         final MenuItem quit = new MenuItem("Quit");
         final Menu paletteMenu = new Menu("Palette");
         final MenuItem newPalette = new MenuItem("New palette...");
+        final MenuItem editPalette = new MenuItem("Edit palette...");
         final MenuItem savePalette = new MenuItem("Save palette...");
         savePalette.setDisable(true);
         final MenuItem loadPalette = new MenuItem("Load palette...");
@@ -85,7 +95,7 @@ public class Main extends Application {
         menubar.getMenus().addAll(fileMenu, paletteMenu);
         fileMenu.getItems().addAll(newMenuItem, new SeparatorMenuItem(), saveMenuItem, saveAsMenuItem,
                 new SeparatorMenuItem(), importMenuItem, exportMenuItem, new SeparatorMenuItem(), quit);
-        paletteMenu.getItems().addAll(newPalette,new SeparatorMenuItem(), savePalette, loadPalette);
+        paletteMenu.getItems().addAll(newPalette ,editPalette ,new SeparatorMenuItem(), savePalette, loadPalette);
 
         //////////////////////////
         //Set up New... MenuItem//
@@ -101,6 +111,7 @@ public class Main extends Application {
         //Set up New Palette MenuItem//
         ///////////////////////////////
         newPalette.setOnAction(mouseEvent-> new PaletteMenu(primaryStage, this));
+        editPalette.setOnAction(mouseEvent->new PaletteMenu(primaryStage, this, paletteList));
         ////////////////////
         //Set up mainScene//
         ////////////////////

@@ -17,7 +17,15 @@ public class ColourButton extends Button {
         mColor = thisColor;
         parentMenu = parent;
 
-        this.setOnAction(mouseEvent-> parentMenu.setSelectedColor(mColor));
+        this.setOnAction(mouseEvent-> {
+            parentMenu.setSelectedColor(mColor);
+            String mColourString = mColor.toString().toUpperCase();
+            StringBuilder formattedColourString = new StringBuilder("Selected Colour = 0x0");
+            formattedColourString.append(mColourString.charAt(3));
+            formattedColourString.append(mColourString.charAt(5));
+            formattedColourString.append(mColourString.charAt(7));
+            parentMenu.setSelectedColourText(formattedColourString.toString());
+        });
 
     }
 
