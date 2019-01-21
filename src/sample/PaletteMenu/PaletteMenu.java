@@ -1,12 +1,15 @@
 package sample.PaletteMenu;
 
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -24,6 +27,13 @@ public class PaletteMenu {
     Boolean existingPalettes = false;
     Color[] existingPalette1, existingPalette2, existingPalette3, existingPalette4;
     Text selectedColourText;
+
+    public Rectangle getSampleRect() {
+        return sampleRect;
+    }
+
+    Rectangle sampleRect;
+
     public void setSelectedColourText(String newColourText) {
         selectedColourText.setText(newColourText);
     }
@@ -115,7 +125,13 @@ public class PaletteMenu {
         }
 
         selectedColourText = new Text();
-        centralVBox.getChildren().addAll(colourGrid ,selectedColourText);
+        sampleRect = new Rectangle(20,20);
+        sampleRect.setVisible(false);
+        HBox horizontalAlignment = new HBox(sampleRect, selectedColourText);
+        horizontalAlignment.setSpacing(10);
+        horizontalAlignment.setAlignment(Pos.CENTER);
+
+        centralVBox.getChildren().addAll(colourGrid ,horizontalAlignment);
         contents.setCenter(centralVBox);
         centralVBox.setAlignment(Pos.CENTER);
         ////////////////

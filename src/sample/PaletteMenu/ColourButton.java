@@ -25,6 +25,12 @@ public class ColourButton extends Button {
             formattedColourString.append(mColourString.charAt(5));
             formattedColourString.append(mColourString.charAt(7));
             parentMenu.setSelectedColourText(formattedColourString.toString());
+
+            if(!parentMenu.getSampleRect().isVisible()){
+                parentMenu.getSampleRect().setVisible(true);
+            }
+
+            parentMenu.getSampleRect().setFill(mColor);
         });
 
     }
