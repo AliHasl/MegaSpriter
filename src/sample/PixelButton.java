@@ -5,7 +5,6 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.paint.Color;
 
 /**
  * Created by u1773783 on 16/10/2018.
@@ -60,7 +59,7 @@ public class PixelButton extends Button {
             this.setBackground(new Background(new BackgroundFill
                     (mainScreen.getSelectedColour(), CornerRadii.EMPTY, Insets.EMPTY)));
             paintedColour = mColour;
-            updateOctalText();
+            updateHexText();
         });
 
         this.setOnScroll(mouseEvent -> {parent.zoom(mouseEvent.getDeltaY());
@@ -69,7 +68,7 @@ public class PixelButton extends Button {
 
     }
 
-    private void updateOctalText(){
+    private void updateHexText(){
         parent.returnHexText();
     }
 

@@ -14,10 +14,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import sample.PaletteMenu.PaletteButton;
 import sample.PaletteMenu.PaletteMenu;
-import sun.text.resources.ro.CollationData_ro;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Main extends Application {
 
@@ -139,12 +137,9 @@ public class Main extends Application {
         //Set up paintArea//
         ////////////////////
 
-
-        //Group paintArea = new Group();
-
         pixelBoard = new PixelBoard(this);
-        mainBorderPane.setCenter(pixelBoard.getGridPane());
-        pixelBoard.getGridPane().setAlignment(Pos.CENTER);
+        mainBorderPane.setCenter(pixelBoard.getSpritePane());
+        pixelBoard.getSpritePane().setAlignment(Pos.CENTER);
 
         selectedColour = defaultPalette1Colours[0];
 
@@ -154,7 +149,7 @@ public class Main extends Application {
          *
          *
          //ScrollPane scrollPane = new ScrollPane();
-        //StackPane canvasHolder = new StackPane(pixelBoard.getGridPane());
+        //StackPane canvasHolder = new StackPane(pixelBoard.getSpritePane());
         //scrollPane.setContent(canvasHolder);
         //paintArea.getChildren().add(scrollPane);
         //paintArea.getChildren().add(canvasHolder);
@@ -197,8 +192,9 @@ public class Main extends Application {
         paletteComboBox = new ComboBox(availablePalettes);
         paletteComboBox.getSelectionModel().selectFirst();
         setSelectedPalette(0);
-        paletteComboBox.setOnAction(mouseEvent->{updateColourPalette( paletteComboBox.getSelectionModel().getSelectedIndex());
-        pixelBoard.updatePalette(getSelectedPalette());
+        paletteComboBox.setOnAction(mouseEvent->{
+            updateColourPalette( paletteComboBox.getSelectionModel().getSelectedIndex());
+            pixelBoard.updatePalette(getSelectedPalette());
         });
 
 
@@ -219,9 +215,13 @@ public class Main extends Application {
     }
 
     public void updateColourSelection(int Colour){
-        for(Node p:pixelBoard.getGridPane().getChildren()){
-            if(p instanceof PixelButton){
-                ((PixelButton) p).setmColour(Colour);
+        for(Node p:pixelBoard.getSpritePane().getChildren()){
+            if(p instanceof GridPane){
+                for(Node pixel: ((GridPane) p).getChildren()) {
+                    if (pixel instanceof PixelButton) {
+                        ((PixelButton) pixel).setmColour(Colour);
+                    }
+                }
             }
         }
     }
@@ -229,8 +229,8 @@ public class Main extends Application {
     public void newCanvas(int x, int y){
         pixelBoard = null;
         pixelBoard = new PixelBoard(this, x, y);
-        mainBorderPane.setCenter(pixelBoard.getGridPane());
-        pixelBoard.getGridPane().setAlignment(Pos.CENTER);
+        mainBorderPane.setCenter(pixelBoard.getSpritePane());
+        pixelBoard.getSpritePane().setAlignment(Pos.CENTER);
         pixelBoard.returnHexText();
     }
 

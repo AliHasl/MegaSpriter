@@ -25,8 +25,6 @@ public class PaletteButton extends Button {
         this.setBackground(new Background(new BackgroundFill(mColor, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
-
-
     PaletteButton(PaletteMenu parent){
         parentMenu = parent;
         this.setOnAction(mouseEvent-> setmColor(parentMenu.getSelectedColor()));
