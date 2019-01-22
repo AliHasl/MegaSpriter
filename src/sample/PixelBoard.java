@@ -4,6 +4,7 @@ package sample;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 
 public class PixelBoard extends GridPane {
 
@@ -67,6 +68,18 @@ public class PixelBoard extends GridPane {
                             ((PixelButton) pixel).getPrefHeight() + mouseWheel * 0.1);
                 }
 
+            }
+        }
+    }
+
+    void updateCanvas(){
+        for (Node tile: spritePane.getChildren()) {
+            if (tile instanceof GridPane) {
+                for (Node pixel : ((GridPane) tile).getChildren()) {
+                    if (pixel instanceof PixelButton) {
+                        ((PixelButton) pixel).setBackgroundColor(parent.getPaletteColor(((PixelButton) pixel).getPaintedColour()));
+                    }
+                }
             }
         }
     }

@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 
 /**
  * Created by u1773783 on 16/10/2018.
@@ -37,6 +38,11 @@ public class PixelButton extends Button {
 
     public int getMColour() {
         return mColour;
+    }
+
+    public void setBackgroundColor(Color newColor){
+        this.setBackground(new Background(new BackgroundFill
+                (newColor, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
     public void setmColour(int mColour) {

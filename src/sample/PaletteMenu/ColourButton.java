@@ -2,7 +2,7 @@ package sample.PaletteMenu;
 
 import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
-import java.awt.*;
+
 
 public class ColourButton extends Button {
 
@@ -21,9 +21,9 @@ public class ColourButton extends Button {
             parentMenu.setSelectedColor(mColor);
             String mColourString = mColor.toString().toUpperCase();
             StringBuilder formattedColourString = new StringBuilder("Selected Colour = 0x0");
-            formattedColourString.append(mColourString.charAt(3));
-            formattedColourString.append(mColourString.charAt(5));
-            formattedColourString.append(mColourString.charAt(7));
+            formattedColourString.append(mColourString.charAt(2));
+            formattedColourString.append(mColourString.charAt(4));
+            formattedColourString.append(mColourString.charAt(6));
             parentMenu.setSelectedColourText(formattedColourString.toString());
 
             if(!parentMenu.getSampleRect().isVisible()){

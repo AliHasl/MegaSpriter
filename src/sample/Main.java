@@ -27,11 +27,10 @@ public class Main extends Application {
     private VBox rightVBox;
     ComboBox paletteComboBox;
 
-    private Color[] defaultPalette1Colours = {Color.BLACK, Color.GREEN, Color.PURPLE, Color.RED, Color.OLDLACE, Color.ORANGE,
+    private Color[] palette1Array = {Color.BLACK, Color.GREEN, Color.PURPLE, Color.RED, Color.OLDLACE, Color.ORANGE,
             Color.PINK, Color.DEEPPINK, Color.LAVENDERBLUSH, Color.YELLOW, Color.CYAN, Color.PURPLE, Color.ALICEBLUE,
             Color.AZURE, Color.FUCHSIA, Color.PEACHPUFF};
-
-    private Color[] palette1Array, palette2Array, palette3Array, palette4Array;
+    private Color[]  palette2Array, palette3Array, palette4Array;
     private ArrayList paletteList;
 
     GridPane mainPalette;
@@ -58,7 +57,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        palette1Array = new Color[16];
         palette2Array = new Color[16];
         palette3Array = new Color[16];
         palette4Array = new Color[16];
@@ -67,6 +65,7 @@ public class Main extends Application {
         paletteList.add(palette2Array);
         paletteList.add(palette3Array);
         paletteList.add(palette4Array);
+
         //////////////////
         //Set up Menubar//
         //////////////////
@@ -141,7 +140,7 @@ public class Main extends Application {
         mainBorderPane.setCenter(pixelBoard.getSpritePane());
         pixelBoard.getSpritePane().setAlignment(Pos.CENTER);
 
-        selectedColour = defaultPalette1Colours[0];
+        selectedColour = palette1Array[0];
 
         /**
          * Code for implementation of scrollbar on grid. Does not add anything but,
@@ -170,14 +169,14 @@ public class Main extends Application {
         mainPalette = new GridPane();
         Group paletteGroup = new Group();
 
-        for(int x = 0; x < 8; x++){
-            for(int y = 0; y <= 1; y++){
-                MainPaletteButton mainPaletteButton = new MainPaletteButton(this, x + (y * 8),
-                        defaultPalette1Colours[x + (y * 8)]);
+        for(int x = 0; x < 2; x++){
+            for(int y = 0; y <= 7; y++){
+                MainPaletteButton mainPaletteButton = new MainPaletteButton(this, y + (x * 8));
                 paletteGroup.getChildren().add(mainPaletteButton);
-                mainPalette.add(mainPaletteButton, x, y);
+                mainPalette.add(mainPaletteButton, y, x);
             }
         }
+        updateColourPalette(0);
 
 
         ///////////////////////
@@ -195,6 +194,7 @@ public class Main extends Application {
         paletteComboBox.setOnAction(mouseEvent->{
             updateColourPalette( paletteComboBox.getSelectionModel().getSelectedIndex());
             pixelBoard.updatePalette(getSelectedPalette());
+            pixelBoard.updateCanvas();
         });
 
 
@@ -212,6 +212,11 @@ public class Main extends Application {
 
 
         primaryStage.show();
+    }
+
+    public Color getPaletteColor(int index){
+        Color[] tempColorPalette = (Color[])paletteList.get(selectedPalette);
+        return tempColorPalette[index];
     }
 
     public void updateColourSelection(int Colour){
@@ -236,6 +241,7 @@ public class Main extends Application {
 
     private void updateColourPalette(int colourPalette){
         int count = 0;
+        selectedPalette = colourPalette;
         switch (colourPalette){
             case 0: for(Node c : mainPalette.getChildren()){
                 if(c instanceof MainPaletteButton){
