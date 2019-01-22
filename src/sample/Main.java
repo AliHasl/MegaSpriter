@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 public class Main extends Application {
 
-    private TextArea hexOutput;
+    private TextArea hexOutput, paletteTextArea;
     private PixelBoard pixelBoard;
     private Color selectedColour;
     private int selectedPalette;
@@ -27,9 +27,11 @@ public class Main extends Application {
     private VBox rightVBox;
     ComboBox paletteComboBox;
 
-    private Color[] palette1Array = {Color.BLACK, Color.GREEN, Color.PURPLE, Color.RED, Color.OLDLACE, Color.ORANGE,
-            Color.PINK, Color.DEEPPINK, Color.LAVENDERBLUSH, Color.YELLOW, Color.CYAN, Color.PURPLE, Color.ALICEBLUE,
-            Color.AZURE, Color.FUCHSIA, Color.PEACHPUFF};
+    private Color[] palette1Array = {Color.web("0xe203e2ff"), Color.web("0x0303e2ff"), Color.web("0x0342e2ff"),
+            Color.web("0x03a2e2ff"), Color.web("0x03e2e2ff"), Color.web("0x030303ff"), Color.web("0x034203ff"),
+            Color.web("0x038203ff"), Color.web("0x03e203ff"), Color.web("0x038203ff"), Color.web("0xe28203ff"),
+            Color.web("0xc242a2ff"), Color.web("0xe2e2e2ff"), Color.web("0x828282ff"), Color.web("0xa28282ff"),
+            Color.web("0xe2e2e2ff")};
     private Color[]  palette2Array, palette3Array, palette4Array;
     private ArrayList paletteList;
 
@@ -172,11 +174,15 @@ public class Main extends Application {
         for(int x = 0; x < 2; x++){
             for(int y = 0; y <= 7; y++){
                 MainPaletteButton mainPaletteButton = new MainPaletteButton(this, y + (x * 8));
+                if(x==0 && y == 0){
+                    mainPaletteButton.setText(mainPaletteButton.gettText());
+                }
                 paletteGroup.getChildren().add(mainPaletteButton);
                 mainPalette.add(mainPaletteButton, y, x);
             }
         }
         updateColourPalette(0);
+        pixelBoard.updateCanvas();
 
 
         ///////////////////////
@@ -199,19 +205,69 @@ public class Main extends Application {
 
 
 
-        ///////////////////
-        //Set up textArea//
-        ///////////////////
+        //////////////////////////
+        //Set up Canvas textArea//
+        //////////////////////////
 
         hexOutput = new TextArea();
         hexOutput.setPrefColumnCount(14);
         hexOutput.setPrefRowCount(9);
         hexOutput.setMinHeight(165);
         pixelBoard.returnHexText();
-        rightVBox.getChildren().addAll(paletteComboBox, mainPalette,new Separator(), hexOutput);
+
+
+        ///////////////////////////
+        //Set up Palette textArea//
+        ///////////////////////////
+        paletteTextArea = new TextArea();
+        paletteTextArea.setPrefColumnCount(18);
+        paletteTextArea.setPrefRowCount(5);
+        paletteTextArea.setMinHeight(100);
+        formatPaletteText();
+        rightVBox.getChildren().addAll(paletteComboBox, mainPalette,new Separator(), hexOutput, new Separator(),
+                paletteTextArea);
 
 
         primaryStage.show();
+    }
+
+    public void formatPaletteText(){
+
+        StringBuilder outputString = new StringBuilder();
+
+        String[] paletteNames = {"PALETTE1:\nDC.W    ","PALETTE2:\nDC.W    ","PALETTE3:\nDC.W    ","PALETTE4:\nDC.W    "};
+        for(int index = 0; index < 4; index++) {
+            outputString.append(paletteNames[index]);
+            int count = 0;
+            for (Color c : (Color[]) paletteList.get(index)) {
+                if (count == 4) {
+                    outputString.append("\nDC.W    ");
+                    count = 0;
+                }
+                try {
+                    outputString.append(formatColourText(c.toString()));
+                    count++;
+                } catch (NullPointerException nullPointerException) {
+                    outputString.append(" $0000");
+                    count++;
+                }
+                if(count != 4){
+                    outputString.append(",");
+                }
+
+            }
+            outputString.append("\n\n");
+        }
+        paletteTextArea.setText(outputString.toString());
+    }
+
+    private String formatColourText(String inColour){
+        StringBuilder outputString = new StringBuilder(" $0");
+            outputString.append(inColour.charAt(6));
+            outputString.append(inColour.charAt(4));
+            outputString.append(inColour.charAt(2));
+
+        return outputString.toString().toUpperCase();
     }
 
     public Color getPaletteColor(int index){

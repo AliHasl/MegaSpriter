@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -46,8 +47,11 @@ public class NewSpriteScreen  {
         bottomOptions.setAlignment(Pos.BOTTOM_RIGHT);
 
         VBox vBox = new VBox();
+        vBox.setSpacing(5);
         HBox horizontalBar1 = new HBox();
         HBox horizontalBar2 = new HBox();
+        horizontalBar1.setSpacing(10);
+        horizontalBar2.setSpacing(10);
 
         setXText = new TextField();
         setXText.setPrefColumnCount(2);
@@ -57,8 +61,11 @@ public class NewSpriteScreen  {
         horizontalBar2.getChildren().addAll(new Text("Set Y axis" ), setYText);
         vBox.getChildren().addAll(horizontalBar1, horizontalBar2);
 
-        contents.setCenter(vBox);
+        contents.setLeft(vBox);
 
+        Text descriptionText = new Text("Set number of tiles in canvas,\neach tile is an 8x8 pixel grid.");
+        contents.setCenter(descriptionText);
+        descriptionText.setTextAlignment(TextAlignment.CENTER);
 
         /////////////////
         //Lower Section//
@@ -80,7 +87,7 @@ public class NewSpriteScreen  {
                 if (Integer.parseInt(setXText.getText()) <= 0 || Integer.parseInt(setYText.getText()) <= 0) {
                     errorText.setText("Please enter positive number values");
                 } else {
-                    parentScreen.newCanvas(Integer.parseInt(setXText.getText()), Integer.parseInt(setYText.getText()));
+                    parentScreen.newCanvas(Integer.parseInt(setYText.getText()), Integer.parseInt(setXText.getText()));
                     thisStage.close();
                 }
             } catch (NumberFormatException n) {

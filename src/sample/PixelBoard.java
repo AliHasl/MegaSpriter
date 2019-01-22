@@ -86,7 +86,7 @@ public class PixelBoard extends GridPane {
 
     void returnHexText(){
 
-        StringBuilder returnString = new StringBuilder();
+        StringBuilder returnString = new StringBuilder("SPRITEGFX:\n");
 
 
         for (Node tile: spritePane.getChildren()) {

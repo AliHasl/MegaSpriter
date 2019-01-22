@@ -21,9 +21,9 @@ public class ColourButton extends Button {
             parentMenu.setSelectedColor(mColor);
             String mColourString = mColor.toString().toUpperCase();
             StringBuilder formattedColourString = new StringBuilder("Selected Colour = 0x0");
-            formattedColourString.append(mColourString.charAt(2));
-            formattedColourString.append(mColourString.charAt(4));
             formattedColourString.append(mColourString.charAt(6));
+            formattedColourString.append(mColourString.charAt(4));
+            formattedColourString.append(mColourString.charAt(2));
             parentMenu.setSelectedColourText(formattedColourString.toString());
 
             if(!parentMenu.getSampleRect().isVisible()){

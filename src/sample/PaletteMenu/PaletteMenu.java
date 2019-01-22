@@ -203,6 +203,7 @@ public class PaletteMenu {
 
         applyButton.setOnAction(mouseEvent->{
             parentScreen.setUpPalettes(palette1, palette2, palette3, palette4);
+            parentScreen.formatPaletteText();
             thisStage.close();
         });
     }
