@@ -10,23 +10,22 @@ import javafx.scene.paint.Color;
 
 public class PaletteButton extends Button {
 
-    PaletteMenu parentMenu;
+    private PaletteMenu parentMenu;
 
-    public Color getmColor() {
+    public Color getMColor() {
         return mColor;
     }
 
-    Color mColor = null;
+    private Color mColor = null;
 
 
-
-    public void setmColor(Color mColor) {
+    void setMColor(Color mColor) {
         this.mColor = mColor;
         this.setBackground(new Background(new BackgroundFill(mColor, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
-    PaletteButton(PaletteMenu parent){
+    PaletteButton(PaletteMenu parent) {
         parentMenu = parent;
-        this.setOnAction(mouseEvent-> setmColor(parentMenu.getSelectedColor()));
+        this.setOnAction(mouseEvent -> setMColor(parentMenu.getSelectedColor()));
     }
 }

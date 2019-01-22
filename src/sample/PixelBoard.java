@@ -1,47 +1,37 @@
 package sample;
 
-
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 
-public class PixelBoard extends GridPane {
 
-    private final int DEFAULT_X = 1;
-    private final int DEFAULT_Y = 1;
-    private int currentPalette;
+class PixelBoard extends GridPane {
 
     private GridPane spritePane, tilePane;
-    private Group pixelButtonGroup;
     private Main parent;
 
-    public GridPane getSpritePane() {
+    GridPane getSpritePane() {
         return spritePane;
     }
 
 
-    PixelBoard(Main owner){
-        super();
+    PixelBoard(Main owner) {
         parent = owner;
-        currentPalette = 0;
-        initialiseBoard(DEFAULT_X, DEFAULT_Y);
+
+        initialiseBoard(1, 1);
     }
 
-    PixelBoard(Main owner, int x, int y){
+    PixelBoard(Main owner, int x, int y) {
         parent = owner;
-        currentPalette = 0;
+
         initialiseBoard(x, y);
     }
 
-    private void initialiseBoard(int x, int y){
+    private void initialiseBoard(int x, int y) {
         spritePane = new GridPane();
-        pixelButtonGroup = new Group();
 
-        for(int z = 0; z < y; z++)
-        {
-            for(int i = 0; i < x; i++)
-            {
+
+        for (int z = 0; z < y; z++) {
+            for (int i = 0; i < x; i++) {
                 tilePane = new GridPane();
                 initialiseTile(tilePane);
                 spritePane.add(tilePane, z, i);
@@ -49,9 +39,9 @@ public class PixelBoard extends GridPane {
         }
     }
 
-    private void initialiseTile(GridPane tile){
-        for(int x = 0; x < 8; x++){
-            for(int y = 0; y < 8; y++){
+    private void initialiseTile(GridPane tile) {
+        for (int x = 0; x < 8; x++) {
+            for (int y = 0; y < 8; y++) {
                 PixelButton pixelButton = new PixelButton(this, parent);
                 tile.add(pixelButton, y, x);
             }
@@ -63,7 +53,7 @@ public class PixelBoard extends GridPane {
 
             if (n instanceof GridPane) {
 
-                for(Node pixel : ((GridPane) n).getChildren()) {
+                for (Node pixel : ((GridPane) n).getChildren()) {
                     ((PixelButton) pixel).setPrefSize(((PixelButton) pixel).getPrefWidth() + mouseWheel * 0.1,
                             ((PixelButton) pixel).getPrefHeight() + mouseWheel * 0.1);
                 }
@@ -72,8 +62,8 @@ public class PixelBoard extends GridPane {
         }
     }
 
-    void updateCanvas(){
-        for (Node tile: spritePane.getChildren()) {
+    void updateCanvas() {
+        for (Node tile : spritePane.getChildren()) {
             if (tile instanceof GridPane) {
                 for (Node pixel : ((GridPane) tile).getChildren()) {
                     if (pixel instanceof PixelButton) {
@@ -84,12 +74,12 @@ public class PixelBoard extends GridPane {
         }
     }
 
-    void returnHexText(){
+    void returnHexText() {
 
         StringBuilder returnString = new StringBuilder("SPRITEGFX:\n");
 
 
-        for (Node tile: spritePane.getChildren()) {
+        for (Node tile : spritePane.getChildren()) {
             if (tile instanceof GridPane) {
                 boolean firstPart = true;
                 int linePart = 0;
@@ -130,14 +120,6 @@ public class PixelBoard extends GridPane {
         }
 
         parent.getHexOutput().setText(returnString.toString());
-
-    }
-
-    public void updatePalette(int palette){
-
-        currentPalette = palette;
-
-
 
     }
 

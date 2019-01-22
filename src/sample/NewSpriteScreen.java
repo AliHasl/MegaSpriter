@@ -1,7 +1,5 @@
 package sample;
 
-import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,18 +12,18 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class NewSpriteScreen  {
+class NewSpriteScreen  {
 
-    Main parentScreen;
-    TextField setXText;
-    TextField setYText;
+    private Main parentScreen;
+    private TextField setXText;
+    private TextField setYText;
 
 
-    public Scene getScene() {
+    private Scene getScene() {
         return newSpriteScene;
     }
 
-    Scene newSpriteScene;
+    private Scene newSpriteScene;
 
     NewSpriteScreen(Stage PreviousStage, Main parent){
         parentScreen = parent;

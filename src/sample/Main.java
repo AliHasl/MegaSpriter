@@ -24,8 +24,7 @@ public class Main extends Application {
     private Color selectedColour;
     private int selectedPalette;
     private BorderPane mainBorderPane;
-    private VBox rightVBox;
-    ComboBox paletteComboBox;
+    private ComboBox paletteComboBox;
 
     private Color[] palette1Array = {Color.web("0xe203e2ff"), Color.web("0x0303e2ff"), Color.web("0x0342e2ff"),
             Color.web("0x03a2e2ff"), Color.web("0x03e2e2ff"), Color.web("0x030303ff"), Color.web("0x034203ff"),
@@ -35,25 +34,25 @@ public class Main extends Application {
     private Color[]  palette2Array, palette3Array, palette4Array;
     private ArrayList paletteList;
 
-    GridPane mainPalette;
+    private GridPane mainPalette;
 
-    public int getSelectedPalette() {
+    private int getSelectedPalette() {
         return selectedPalette;
     }
 
-    public void setSelectedPalette(int selectedPalette) {
+    private void setSelectedPalette(int selectedPalette) {
         this.selectedPalette = selectedPalette;
     }
 
-    public Color getSelectedColour() {
+    Color getSelectedColour() {
         return selectedColour;
     }
 
-    public void setSelectedColour(Color selectedColour) {
+    void setSelectedColour(Color selectedColour) {
         this.selectedColour = selectedColour;
     }
 
-    public TextArea getHexOutput() {
+    TextArea getHexOutput() {
         return hexOutput;
     }
 
@@ -165,7 +164,7 @@ public class Main extends Application {
         //Set up palette//
         ///////////////////
 
-        rightVBox = new VBox();
+        VBox rightVBox = new VBox();
         rightVBox.setSpacing(5);
         mainBorderPane.setRight(rightVBox);
         mainPalette = new GridPane();
@@ -175,7 +174,7 @@ public class Main extends Application {
             for(int y = 0; y <= 7; y++){
                 MainPaletteButton mainPaletteButton = new MainPaletteButton(this, y + (x * 8));
                 if(x==0 && y == 0){
-                    mainPaletteButton.setText(mainPaletteButton.gettText());
+                    mainPaletteButton.setText("T");
                 }
                 paletteGroup.getChildren().add(mainPaletteButton);
                 mainPalette.add(mainPaletteButton, y, x);
@@ -199,11 +198,8 @@ public class Main extends Application {
         setSelectedPalette(0);
         paletteComboBox.setOnAction(mouseEvent->{
             updateColourPalette( paletteComboBox.getSelectionModel().getSelectedIndex());
-            pixelBoard.updatePalette(getSelectedPalette());
-            pixelBoard.updateCanvas();
+            updateCanvas();
         });
-
-
 
         //////////////////////////
         //Set up Canvas textArea//
@@ -287,7 +283,7 @@ public class Main extends Application {
         }
     }
 
-    public void newCanvas(int x, int y){
+    void newCanvas(int x, int y){
         pixelBoard = null;
         pixelBoard = new PixelBoard(this, x, y);
         mainBorderPane.setCenter(pixelBoard.getSpritePane());
@@ -334,28 +330,28 @@ public class Main extends Application {
         int count = 0;
         for(Node n: one.getChildren()){
             if(n instanceof PaletteButton){
-                palette1Array[count] = ((PaletteButton) n).getmColor();
+                palette1Array[count] = ((PaletteButton) n).getMColor();
                 count++;
             }
         }
         count = 0;
         for(Node n: two.getChildren()){
             if(n instanceof PaletteButton){
-                palette2Array[count] = ((PaletteButton) n).getmColor();
+                palette2Array[count] = ((PaletteButton) n).getMColor();
                 count++;
             }
         }
         count = 0;
         for(Node n: three.getChildren()){
             if(n instanceof PaletteButton){
-                palette3Array[count] = ((PaletteButton) n).getmColor();
+                palette3Array[count] = ((PaletteButton) n).getMColor();
                 count++;
             }
         }
         count = 0;
         for(Node n: four.getChildren()){
             if(n instanceof PaletteButton){
-                palette4Array[count] = ((PaletteButton) n).getmColor();
+                palette4Array[count] = ((PaletteButton) n).getMColor();
                 count++;
             }
         }
@@ -364,6 +360,9 @@ public class Main extends Application {
         updateColourPalette(0);
     }
 
+    public void updateCanvas(){
+        pixelBoard.updateCanvas();
+    }
 
     public static void main(String[] args) {
         launch(args);

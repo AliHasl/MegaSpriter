@@ -6,9 +6,6 @@ import javafx.scene.paint.Color;
 
 public class ColourButton extends Button {
 
-    public Color getmColor() {
-        return mColor;
-    }
 
     private Color mColor;
     private PaletteMenu parentMenu;
