@@ -10,11 +10,11 @@ public class ColourButton extends Button {
     private Color mColor;
     private PaletteMenu parentMenu;
 
-    ColourButton(Color thisColor, PaletteMenu parent){
+    ColourButton(Color thisColor, PaletteMenu parent) {
         mColor = thisColor;
         parentMenu = parent;
 
-        this.setOnAction(mouseEvent-> {
+        this.setOnAction(mouseEvent -> {
             parentMenu.setSelectedColor(mColor);
             String mColourString = mColor.toString().toUpperCase();
             StringBuilder formattedColourString = new StringBuilder("Selected Colour = 0x0");
@@ -23,7 +23,7 @@ public class ColourButton extends Button {
             formattedColourString.append(mColourString.charAt(2));
             parentMenu.setSelectedColourText(formattedColourString.toString());
 
-            if(!parentMenu.getSampleRect().isVisible()){
+            if (!parentMenu.getSampleRect().isVisible()) {
                 parentMenu.getSampleRect().setVisible(true);
             }
 

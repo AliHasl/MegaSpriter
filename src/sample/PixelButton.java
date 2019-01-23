@@ -8,57 +8,38 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 
 /**
- * Created by u1773783 on 16/10/2018.
+ * Created by Alistair on 16/10/2018.
  */
 
 
-public class PixelButton extends Button {
+class PixelButton extends Button {
 
-    PixelBoard parent;
-
-
-
-    private int mColour;
-    private int mPalette;
-    private int paintedColour;
     private Main mainScreen;
+    private PixelBoard parent;
+    private int mColour;
+    private int paintedColour;
 
-    public int getPaintedColour() {
+    int getPaintedColour() {
         return paintedColour;
     }
 
-    public int getmPalette() {
-        return mPalette;
-    }
-
-    public void setmPalette(int mPalette) {
-        this.mPalette = mPalette;
-    }
-
-
-    public int getMColour() {
-        return mColour;
-    }
-
-    public void setBackgroundColor(Color newColor){
+    void setBackgroundColor(Color newColor) {
         this.setBackground(new Background(new BackgroundFill
                 (newColor, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
-    public void setmColour(int mColour) {
+    void setMColour(int mColour) {
         this.mColour = mColour;
     }
 
-    public PixelButton(PixelBoard owner, Main topLevel) {
+    PixelButton(PixelBoard owner, Main topLevel) {
         mainScreen = topLevel;
         parent = owner;
         mColour = 0;
-        this.setMinSize(10, 10);
+        this.setMinSize(2, 2);
         this.setPrefSize(10, 10);
-
         this.setOnDragDetected(mouseEvent -> this.startFullDrag());
         this.setOnMouseDragEntered(mouseEvent -> fire());
-
         this.setOnMousePressed(mouseEvent -> fire());
 
         this.setOnAction(mouseEvent -> {
@@ -68,14 +49,11 @@ public class PixelButton extends Button {
             updateHexText();
         });
 
-        this.setOnScroll(mouseEvent -> {parent.zoom(mouseEvent.getDeltaY());
-
-        });
-
+        this.setOnScroll(mouseEvent ->
+            parent.zoom(mouseEvent.getDeltaY()));
     }
 
-    private void updateHexText(){
+    private void updateHexText() {
         parent.returnHexText();
     }
-
 }

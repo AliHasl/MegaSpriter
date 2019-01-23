@@ -13,7 +13,6 @@ class PixelBoard extends GridPane {
         return spritePane;
     }
 
-
     PixelBoard(Main owner) {
         parent = owner;
 
@@ -28,8 +27,6 @@ class PixelBoard extends GridPane {
 
     private void initialiseBoard(int x, int y) {
         spritePane = new GridPane();
-
-
         for (int z = 0; z < y; z++) {
             for (int i = 0; i < x; i++) {
                 tilePane = new GridPane();
@@ -50,14 +47,11 @@ class PixelBoard extends GridPane {
 
     void zoom(Double mouseWheel) {
         for (Node n : spritePane.getChildren()) {
-
             if (n instanceof GridPane) {
-
                 for (Node pixel : ((GridPane) n).getChildren()) {
                     ((PixelButton) pixel).setPrefSize(((PixelButton) pixel).getPrefWidth() + mouseWheel * 0.1,
                             ((PixelButton) pixel).getPrefHeight() + mouseWheel * 0.1);
                 }
-
             }
         }
     }
@@ -75,10 +69,7 @@ class PixelBoard extends GridPane {
     }
 
     void returnHexText() {
-
         StringBuilder returnString = new StringBuilder("SPRITEGFX:\n");
-
-
         for (Node tile : spritePane.getChildren()) {
             if (tile instanceof GridPane) {
                 boolean firstPart = true;
@@ -92,7 +83,6 @@ class PixelBoard extends GridPane {
                                     .getPaintedColour())).toUpperCase());
                             firstPart = true;
                             linePart = 0;
-
                         } else if (linePart == 0) {
                             tileString.append(String.format("DC.B    $%s", Integer.toHexString(((PixelButton) pixel)
                                     .getPaintedColour())).toUpperCase());
@@ -109,19 +99,12 @@ class PixelBoard extends GridPane {
                             firstPart = false;
                             linePart++;
                         }
-
-
                     }
-
                 }
                 tileString.append("\n");
                 returnString.append(tileString.toString());
             }
         }
-
         parent.getHexOutput().setText(returnString.toString());
-
     }
-
-
 }
