@@ -186,7 +186,9 @@ public class PaletteMenu {
         Button applyButton = new Button("Apply");
         Button cancelButton = new Button("Cancel");
         Button saveAsButton = new Button("Save As...");
+        saveAsButton.setDisable(true);
         Button loadButton = new Button("Load...");
+        loadButton.setDisable(true);
         bottomOptions.getChildren().addAll(saveAsButton, loadButton, applyButton, cancelButton);
         Stage thisStage = (Stage) this.getScene().getWindow();
         cancelButton.setCancelButton(true);

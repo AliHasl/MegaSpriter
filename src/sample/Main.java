@@ -151,7 +151,7 @@ public class Main extends Application {
             okHBox.setAlignment(Pos.CENTER);
             okButton.setOnAction(click->aboutPopup.close());
 
-            Text aboutText = new Text("MegaSpriter v1.0\n\u00A9 Alistair Haslam 2019");
+            Text aboutText = new Text("MegaSpriter v1.0\nAlistair Haslam 2019");
             aboutBorderPane.setCenter(aboutText);
             aboutText.setTextAlignment(TextAlignment.CENTER);
 
